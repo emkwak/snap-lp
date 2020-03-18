@@ -16,8 +16,8 @@ class ImageDetect extends React.Component {
   }
 
   async init() {
-    const modelURL = URL + "model.json";
-    const metadataURL = URL + "metadata.json";
+    const modelURL = `${URL}model.json`;
+    const metadataURL = `${URL}metadata.json`;
 
     model = await tmImage.load(modelURL, metadataURL);
     maxPredictions = model.getTotalClasses();
@@ -46,7 +46,7 @@ class ImageDetect extends React.Component {
     const prediction = await model.predict(webcam.canvas);
     for (let i = 0; i < maxPredictions; i++) {
       const classPrediction =
-        prediction[i].className + ": " + Math.round(prediction[i].probability * 10000) / 100 + '%';
+        `${prediction[i].className}: ${Math.round(prediction[i].probability * 10000) / 100}%`;
       labelContainer.childNodes[i].innerHTML = classPrediction;
     }
   }
