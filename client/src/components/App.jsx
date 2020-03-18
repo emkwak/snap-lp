@@ -1,5 +1,5 @@
 import React from 'react';
-
+import ImageDetect from './ImageDetect.jsx'
 
 class App extends React.Component {
   constructor(props) {
@@ -9,7 +9,8 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>APP!</h1>
+        <h1>SnapLP</h1>
+        <ImageDetect />
       </div>
     )
   }
