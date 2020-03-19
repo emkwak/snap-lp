@@ -1,19 +1,12 @@
 const express = require('express');
 const app = express();
-const port = 7000
-require('dotenv').config()
+const port = 7000;
 
-var Discogs = require('disconnect').Client;
-
-var db = new Discogs({ userToken: process.env.TOKEN }).database();
-
-db.search('title=nirvana - nevermind')
-  .then(function (data) {
-    console.log(data)
-  })
-  .catch(err => err)
+const albumRouter = require('./routes/albums.js');
 
 app.use(express.static('public'));
+
+app.use('/albums', albumRouter);
 
 app.listen(port, () =>
   console.log(`Listening on port ${port}`)
