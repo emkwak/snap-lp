@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 7000;
+const db = require('../database/index.js')
 
 const albumRouter = require('./routes/albums.js');
 
