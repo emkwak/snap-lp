@@ -9,10 +9,22 @@ let model, webcam, labelContainer, maxPredictions;
 class ImageDetect extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      albums: []
+    }
 
     this.init = this.init.bind(this);
     this.loop = this.loop.bind(this);
     this.predict = this.predict.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:7000/albums/')
+      .then(res => res.json())
+      .then((result) => this.setState({
+        albums: result
+      }))
+      .catch((err) => console.log(`Error: ${err}`))
   }
 
   async init() {
@@ -56,6 +68,7 @@ class ImageDetect extends React.Component {
   }
 
   render() {
+    console.log(this.state)
     return (
       <div>
         <div id="webcam-container"></div>
