@@ -8,7 +8,7 @@ var Discogs = require('disconnect').Client;
 
 var discogsDB = new Discogs({ userToken: process.env.TOKEN }).database();
 
-router.route('/search').get((req, res) => {
+router.route('/').get((req, res) => {
   Album.Album.find()
     .then((result) => res.status(200).send(result))
     .catch(err => res.status(400).json(`Error: ${err}`));
