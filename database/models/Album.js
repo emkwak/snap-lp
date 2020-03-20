@@ -9,12 +9,13 @@ const AlbumSchema = new mongoose.Schema({
   cover_image: String,
   master_url: String,
   year: String,
-  genre: [String]
+  genre: [String],
+  tracklist: []
 })
 
 const Album = mongoose.model('Album', AlbumSchema);
 
-let saveAlbum = (album) => {
+let saveAlbum = (album, track) => {
   let newAlbum = new Album({
     id: album.id,
     style: album.style,
@@ -22,7 +23,8 @@ let saveAlbum = (album) => {
     cover_image: album.cover_image,
     master_url: album.master_url,
     year: album.year,
-    genre: album.genre
+    genre: album.genre,
+    tracklist: track
   }).save((err, data) => {
     if (err) {
       console.log(`Error: ${err}`);

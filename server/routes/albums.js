@@ -22,7 +22,10 @@ router.route('/search/:id').post((req, res) => {
       const album = data.results.filter(album =>
         album.title.toLowerCase().includes(artistTitle.pop())
       )[0]
-      save.saveAlbum(album)
+
+      discogsDB.getMaster(album.master_id)
+        .then((result) => save.saveAlbum(album, result.tracklist))
+        .catch(err => console.log(`Error: ${err}`))
     })
     .catch(err => res.status(404).json(`Error: ${err}`));
 })
