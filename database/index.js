@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 const mongoUri = 'mongodb://localhost/albums';
 
-mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
 var db = mongoose.connection;
 
