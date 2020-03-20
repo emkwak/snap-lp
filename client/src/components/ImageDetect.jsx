@@ -45,10 +45,14 @@ class ImageDetect extends React.Component {
   async predict() {
     const prediction = await model.predict(webcam.canvas);
     for (let i = 0; i < maxPredictions; i++) {
-      const classPrediction =
-        `${prediction[i].className}: ${Math.round(prediction[i].probability * 10000) / 100}%`;
-      labelContainer.childNodes[i].innerHTML = classPrediction;
+      if (Math.round(prediction[i].probability * 10000) / 100 >= 97) {
+        console.log(prediction[i].className)
+      }
     }
+    // if the prediction is greater than 97%
+    // check to see if state title in album matches artist-title
+    // if it doesn't match
+    // make a post request with data lowercase artist-title
   }
 
   render() {
