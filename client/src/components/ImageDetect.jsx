@@ -55,10 +55,15 @@ class ImageDetect extends React.Component {
 
 
   async predict() {
+    let albums = this.state.albums;
     const prediction = await model.predict(webcam.canvas);
     for (let i = 0; i < maxPredictions; i++) {
       if (Math.round(prediction[i].probability * 10000) / 100 >= 97) {
-        console.log(prediction[i].className)
+        albums.map(lp => {
+          if (lp.title === prediction[i].className) {
+            console.log(lp)
+          }
+        })
       }
     }
     // if the prediction is greater than 97%
@@ -68,7 +73,6 @@ class ImageDetect extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div>
         <div id="webcam-container"></div>
