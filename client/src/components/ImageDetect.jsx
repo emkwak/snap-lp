@@ -10,12 +10,18 @@ class ImageDetect extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      albums: []
+      albums: [],
+      match: false,
+      artist: '',
+      foundAlbum: {},
+      id: ''
     }
 
     this.init = this.init.bind(this);
     this.loop = this.loop.bind(this);
     this.predict = this.predict.bind(this);
+    this.check = this.check.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
@@ -55,24 +61,46 @@ class ImageDetect extends React.Component {
 
 
   async predict() {
-    let albums = this.state.albums;
     const prediction = await model.predict(webcam.canvas);
     for (let i = 0; i < maxPredictions; i++) {
       if (Math.round(prediction[i].probability * 10000) / 100 >= 97) {
-        albums.map(lp => {
-          if (lp.title === prediction[i].className) {
-            console.log(lp)
-          }
-        })
+        this.setState({ artist: prediction[i].className, match: true }, this.check())
       }
     }
-    // if the prediction is greater than 97%
-    // check to see if state title in album matches artist-title
-    // if it doesn't match
-    // make a post request with data lowercase artist-title
+  }
+
+  check() {
+    let albums = this.state.albums;
+    if (this.state.match) {
+      albums.filter(lp => {
+        let artistTitle = this.state.artist
+        if (lp.title === artistTitle) {
+          this.setState({ foundAlbum: lp })
+        }
+        else {
+          artistTitle = artistTitle.split('-').join('').replace(/ +/g, '-').toLowerCase()
+          this.setState({ id: artistTitle }, this.fetchData(this.state.id))
+        }
+      })
+    }
+  }
+
+  fetchData(id) {
+    if (this.state.match === false) {
+      fetch(`http://localhost:7000/albums/search/${id}`, {
+        method: 'POST'
+      })
+        .then(() => {
+          console.log('Success!');
+        })
+        .catch((err) => {
+          console.error('Error:', err);
+        });
+    }
   }
 
   render() {
+    console.log(this.state)
     return (
       <div>
         <div id="webcam-container"></div>
