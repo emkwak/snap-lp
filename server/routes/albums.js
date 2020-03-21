@@ -15,6 +15,27 @@ router.route('/').get((req, res) => {
 })
 
 router.route('/search/:id').post((req, res) => {
+  let saveAlbum = (album, track) => {
+    let newAlbum = new Album.Album({
+      id: album.id,
+      style: album.style,
+      title: album.title,
+      cover_image: album.cover_image,
+      master_url: album.master_url,
+      year: album.year,
+      genre: album.genre,
+      tracklist: track
+    }).save((err, data) => {
+      if (err) {
+        if (err.name === 'MongoError' && err.code === 11000) {
+          return res.redirect('/');
+        }
+      } else {
+        console.log('Album saved!');
+      }
+    })
+  }
+
   let artistTitle = req.params.id
   discogsDB.search(`title=${artistTitle}`)
     .then(function (data) {
@@ -24,10 +45,11 @@ router.route('/search/:id').post((req, res) => {
       )[0]
 
       discogsDB.getMaster(album.master_id)
-        .then((result) => save.saveAlbum(album, result.tracklist))
+        .then((result) => saveAlbum(album, result.tracklist))
         .catch(err => console.log(`Error: ${err}`))
+
     })
-    .catch(err => res.status(404).json(`Error: ${err}`));
+    .catch(err => err.name === 'DiscogsError' && err.code === 429 ? res.redirect('/') : res.status(404).json(`Error: ${err}`));
 })
 
 module.exports = router;
