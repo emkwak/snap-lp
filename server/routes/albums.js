@@ -1,7 +1,6 @@
 const router = require('express').Router();
 require('dotenv').config()
 
-const save = require('../../database/models/Album.js');
 const Album = require('../../database/models/Album.js');
 
 var Discogs = require('disconnect').Client;
@@ -9,14 +8,14 @@ var Discogs = require('disconnect').Client;
 var discogsDB = new Discogs({ userToken: process.env.TOKEN }).database();
 
 router.route('/').get((req, res) => {
-  Album.Album.find()
+  Album.find()
     .then((result) => res.status(200).send(result))
     .catch(err => res.status(400).json(`Error: ${err}`));
 })
 
 router.route('/search/:id').post((req, res) => {
   let saveAlbum = (album, track) => {
-    let newAlbum = new Album.Album({
+    let newAlbum = new Album({
       id: album.id,
       style: album.style,
       title: album.title,
@@ -31,7 +30,7 @@ router.route('/search/:id').post((req, res) => {
           return res.redirect('/');
         }
       } else {
-        console.log('Album saved!');
+        return res.redirect('/');
       }
     })
   }
