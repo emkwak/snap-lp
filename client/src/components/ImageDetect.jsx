@@ -86,34 +86,30 @@ class ImageDetect extends React.Component {
   }
 
   fetchData(id) {
-    {
-      this.state.foundAlbum ? fetch(`http://localhost:7000/albums/search/${id}`, {
-        method: 'POST'
+    fetch(`http://localhost:7000/albums/search/${id}`, {
+      method: 'POST'
+    })
+      .then(() => {
+        console.log('Success!');
+        fetch('http://localhost:7000/albums/')
+          .then(res => res.json())
+          .then((result) => this.setState({
+            albums: result
+          }))
       })
-        .then(() => {
-          console.log('Success!');
-          fetch('http://localhost:7000/albums/')
-            .then(res => res.json())
-            .then((result) => this.setState({
-              albums: result
-            }))
-        })
-        .catch((err) => {
-          console.error('Error:', err);
-        }) : null
-    }
+      .catch((err) => {
+        console.error('Error:', err);
+      })
   }
 
   render() {
     const match = this.state.match
-    console.log(this.state.albums)
-    console.log(this.state.foundAlbum)
     return (
       <div>
         <div id="webcam-container"></div>
         <div id="label-container"></div>
         <button type="button" onClick={this.init} >Scan</button >
-        {match ? <AlbumInfo /> : null}
+        {match ? <AlbumInfo album={this.state.foundAlbum} /> : null}
       </div>
     )
   }
