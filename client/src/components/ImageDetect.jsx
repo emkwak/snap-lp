@@ -1,5 +1,8 @@
 import React from 'react';
 
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+
 import AlbumInfo from './AlbumInfo.jsx'
 
 const URL = "https://teachablemachine.withgoogle.com/models/UByLl9Ki/";
@@ -106,9 +109,16 @@ class ImageDetect extends React.Component {
     const match = this.state.match
     return (
       <div>
-        <div id="webcam-container"></div>
-        <div id="label-container"></div>
-        <button type="button" onClick={this.init} >Scan</button >
+        <Grid style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}>
+          <div id="webcam-container"></div>
+          <Button variant="contained" onClick={this.init} style={{ color: '#fff', backgroundColor: '#8A2BE2', margin: '10px 0 10px 0' }} disableElevation>
+            Scan
+    </Button>
+        </Grid>
         {match ? <AlbumInfo album={this.state.foundAlbum} /> : null}
       </div>
     )
