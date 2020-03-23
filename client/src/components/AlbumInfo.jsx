@@ -31,7 +31,6 @@ const useStyles = makeStyles({
 });
 
 const AlbumInfo = ({ album }) => {
-  console.log(album)
   const classes = useStyles();
 
   return (
