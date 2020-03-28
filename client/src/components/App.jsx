@@ -8,13 +8,16 @@ import Grid from '@material-ui/core/Grid';
 const useStyles = makeStyles({
   title: {
     fontFamily: 'Lobster, cursive',
-    fontSize: 50
+    fontSize: 50,
+    textAlign: 'center'
   },
   container: {
     margin: '0 auto',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
+    border: '4px #8A2BE2 solid',
+    borderRadius: 7,
+    padding: '20px 20px 60px 20px',
+    position: 'relative',
+    top: 50
   }
 });
 
@@ -23,12 +26,10 @@ const App = () => {
 
   return (
     <div>
-      <Container>
-        <Grid className={classes.container}>
-          <h1 className={classes.title}> SnapLP</h1>
-          <ImageDetect />
-        </Grid>
-      </Container>
+      <Grid md={4} className={classes.container}>
+        <h1 className={classes.title}> Snap-LP</h1>
+        <ImageDetect />
+      </Grid>
     </div>
   )
 
