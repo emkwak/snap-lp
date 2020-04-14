@@ -1,5 +1,10 @@
 import React from 'react';
 
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+
+import AlbumInfo from './AlbumInfo.jsx'
+
 const URL = "https://teachablemachine.withgoogle.com/models/UByLl9Ki/";
 
 let model, webcam, labelContainer, maxPredictions;
@@ -64,48 +69,57 @@ class ImageDetect extends React.Component {
     const prediction = await model.predict(webcam.canvas);
     for (let i = 0; i < maxPredictions; i++) {
       if (Math.round(prediction[i].probability * 10000) / 100 >= 97) {
-        this.setState({ artist: prediction[i].className, match: true }, this.check())
+        this.setState({ artist: prediction[i].className }, this.check())
       }
     }
   }
 
   check() {
     let albums = this.state.albums;
-    if (this.state.match) {
-      albums.filter(lp => {
-        let artistTitle = this.state.artist
-        if (lp.title === artistTitle) {
-          this.setState({ foundAlbum: lp })
-        }
-        else {
-          artistTitle = artistTitle.split('-').join('').replace(/ +/g, '-').toLowerCase()
-          this.setState({ id: artistTitle }, this.fetchData(this.state.id))
-        }
-      })
-    }
+    albums.filter(lp => {
+      let artistTitle = this.state.artist
+      if (lp.title === artistTitle) {
+        this.setState({ foundAlbum: lp, match: true })
+      }
+      else {
+        artistTitle = artistTitle.split('-').join('').replace(/ +/g, '-').toLowerCase()
+        this.setState({ id: artistTitle }, this.fetchData(this.state.id))
+      }
+    })
   }
 
   fetchData(id) {
-    if (this.state.match === false) {
-      fetch(`http://localhost:7000/albums/search/${id}`, {
-        method: 'POST'
+    fetch(`http://localhost:7000/albums/search/${id}`, {
+      method: 'POST'
+    })
+      .then(() => {
+        console.log('Success!');
+        fetch('http://localhost:7000/albums/')
+          .then(res => res.json())
+          .then((result) => this.setState({
+            albums: result
+          }))
       })
-        .then(() => {
-          console.log('Success!');
-        })
-        .catch((err) => {
-          console.error('Error:', err);
-        });
-    }
+      .catch((err) => {
+        console.error('Error:', err);
+      })
   }
 
   render() {
-    console.log(this.state)
+    const match = this.state.match
     return (
       <div>
-        <div id="webcam-container"></div>
-        <div id="label-container"></div>
-        <button type="button" onClick={this.init} >Scan</button >
+        <Grid style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}>
+          <div id="webcam-container"></div>
+          <Button variant="contained" onClick={this.init} style={{ color: '#fff', backgroundColor: '#8A2BE2', margin: '10px 0 10px 0' }} disableElevation>
+            Scan
+    </Button>
+        </Grid>
+        {match ? <AlbumInfo album={this.state.foundAlbum} /> : null}
       </div>
     )
   }
